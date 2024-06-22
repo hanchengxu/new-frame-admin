@@ -1,0 +1,7 @@
+src/**/*.d.ts
+src/api/$axios.ts
+node_modules/**/*
+__tests__
+test
+vite.config.ts
+components.d.ts

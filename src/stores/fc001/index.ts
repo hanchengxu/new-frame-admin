@@ -1,29 +1,28 @@
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia';
 
 export const useFc001Store = defineStore('fc001', {
-    state: () => {
-        return {
-            count: 0 as number
-        }
+  state: () => {
+    return {
+      count: 0 as number,
+    };
+  },
+
+  getters: {
+    getCount: (state) => state.count,
+  },
+
+  actions: {
+    increment() {
+      this.count++;
+      // throw new Error('test error');
     },
 
-    getters: {
-        getCount: (state) => state.count,
+    testAction(args: string[]) {
+      console.log(args);
     },
 
-    actions: {
-        increment() {
-            this.count++
-            // throw new Error('test error');
-        },
-
-        testAction(args:string[]) {
-            console.log(args);
-        },
-        
-        minus() {
-            this.count--
-        },
-    }
-
-})
+    minus() {
+      this.count--;
+    },
+  },
+});
