@@ -1,14 +1,28 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import A from '@/views/fc001/A.vue';
 import B from '@/views/fc002/B.vue';
+import Login from '@/views/Login.vue';
 import Top from '@/views/Top.vue';
-// console.log(viteConfig.base)
+import { useGlobalState } from '@/stores/global';
+import { isEmpty } from 'radash';
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'Top',
+    name: 'Login',
+    component: Login,
+  },
+  {
+    path: '/top',
+    name: 'top',
     component: Top,
+    beforeEnter() {
+      if (isEmpty(useGlobalState().loginToken)) {
+        return '/';
+      } else {
+        return true;
+      }
+    },
   },
   {
     path: '/A',

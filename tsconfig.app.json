@@ -2,7 +2,7 @@
   "compilerOptions": {
     "composite": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    "resolvePackageJsonExports":false,
+    "resolvePackageJsonExports": false,
     "target": "ES2020",
     "useDefineForClassFields": true,
     "module": "ESNext",
@@ -26,7 +26,8 @@
     "paths": {
       "@": ["./src"],
       "@/*": ["./src/*"]
-    },
+    }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue","plugin/*"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "plugin/*", "src/views/**/*.vue"]
 }
+

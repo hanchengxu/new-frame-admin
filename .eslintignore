@@ -1,4 +1,5 @@
 src/**/*.d.ts
+src/assets/*
 src/api/$axios.ts
 node_modules/**/*
 __tests__
