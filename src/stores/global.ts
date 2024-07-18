@@ -1,20 +1,29 @@
+import router from '@/router';
 import { defineStore } from 'pinia';
 import { markRaw } from 'vue';
-import { Router, useRouter } from 'vue-router';
+import { Router } from 'vue-router';
+
+import { App } from 'ant-design-vue';
+import type { MessageInstance } from 'ant-design-vue/es/message/interface';
 
 export interface GlobalState {
   processing: boolean;
   loginToken: string;
-  router: Router;
+  router: Router; // システムルーター
+  previousRouterName: string;
+  message: MessageInstance; //グローバル メッセージ
 }
 
 export const useGlobalState = defineStore('global', {
   state: () => {
-    const router = useRouter();
+    const staticFunction = App.useApp();
+    const message: MessageInstance = staticFunction.message;
     return {
       processing: false,
       loginToken: '',
       router: markRaw(router),
+      previousRouterName: '',
+      message: markRaw(message),
     };
   },
 
@@ -24,6 +33,9 @@ export const useGlobalState = defineStore('global', {
   },
 
   actions: {
+    setPreviousRouterName(previousRouterName: string) {
+      this.previousRouterName = previousRouterName;
+    },
     startProcessing() {
       this.processing = true;
     },

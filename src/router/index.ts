@@ -1,10 +1,20 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
-import A from '@/views/fc001/A.vue';
-import B from '@/views/fc002/B.vue';
 import Login from '@/views/Login.vue';
 import Top from '@/views/Top.vue';
 import { useGlobalState } from '@/stores/global';
 import { isEmpty } from 'radash';
+import TargetList from '../views/fc001/TargetList.vue';
+import TargetEdit from '../views/fc001/TargetEdit.vue';
+import QRCode from '@/views/fc002/QRCode.vue';
+import { storeMap } from '@/stores/pinia';
+import { toRaw } from 'vue';
+
+declare module 'vue-router' {
+  interface RouteMeta {
+    // 使うstore名のリスト
+    stores?: string[];
+  }
+}
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -18,21 +28,31 @@ const routes: Array<RouteRecordRaw> = [
     component: Top,
     beforeEnter() {
       if (isEmpty(useGlobalState().loginToken)) {
-        return '/';
+        return true;
       } else {
         return true;
       }
     },
-  },
-  {
-    path: '/A',
-    name: 'A',
-    component: A,
-  },
-  {
-    path: '/B',
-    name: 'B',
-    component: B,
+    children: [
+      {
+        path: 'targetList',
+        name: 'リスト検索',
+        component: TargetList,
+        meta: {
+          stores: ['fc001'],
+        },
+      },
+      {
+        path: 'targetEdit',
+        name: '変更',
+        component: TargetEdit,
+      },
+      {
+        path: 'qrcode',
+        name: 'QRコード管理',
+        component: QRCode,
+      },
+    ],
   },
 ];
 
@@ -41,9 +61,20 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, _from, next) => {
-  console.log('Navigating to:', to.path);
-  next();
+router.beforeEach((_to, from) => {
+  useGlobalState().setPreviousRouterName((from.name as string) ?? '');
+  return true;
+});
+
+router.afterEach((_to, from) => {
+  if (from.meta.stores) {
+    from.meta.stores.forEach((storeName: string) => {
+      const store = toRaw(storeMap.get(storeName));
+      if (store && Object.prototype.hasOwnProperty.call(store, 'getInitData')) {
+        store.resetAll(store.getInitData());
+      }
+    });
+  }
 });
 
 export const goToOtherPage = (path: string) => {

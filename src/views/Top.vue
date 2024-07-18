@@ -3,13 +3,13 @@
     <a-layout-sider id="components-layout-demo-side" collapsible>
       <div class="logo" />
       <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
-        <a-menu-item key="1">
+        <a-menu-item key="1" @click="clickMenu('1', '/top/targetList')">
           <pie-chart-outlined />
-          <span>Option 1</span>
+          <span>イベント検索</span>
         </a-menu-item>
-        <a-menu-item key="2">
+        <a-menu-item key="2" @click="clickMenu('2', '/top/qrcode')">
           <desktop-outlined />
-          <span>Option 2</span>
+          <span>QRコード管理</span>
         </a-menu-item>
         <a-sub-menu key="sub1">
           <template #title>
@@ -34,106 +34,50 @@
         </a-sub-menu>
         <a-menu-item key="9">
           <file-outlined />
-          <span>File</span>
-        </a-menu-item>
-        <a-menu-item key="">
-          <file-outlined />
-          <span>File2</span>
-        </a-menu-item>
-        <a-menu-item key="">
-          <file-outlined />
-          <span>File2</span>
-        </a-menu-item>
-        <a-menu-item key="">
-          <file-outlined />
-          <span>File2</span>
-        </a-menu-item>
-        <a-menu-item key="">
-          <file-outlined />
-          <span>File2</span>
-        </a-menu-item>
-        <a-menu-item key="">
-          <file-outlined />
-          <span>File2</span>
-        </a-menu-item>
-        <a-menu-item key="">
-          <file-outlined />
-          <span>File2</span>
-        </a-menu-item>
-        <a-menu-item key="">
-          <file-outlined />
-          <span>File2</span>
-        </a-menu-item>
-        <a-menu-item key="">
-          <file-outlined />
-          <span>File2</span>
-        </a-menu-item>
-        <a-menu-item key="">
-          <file-outlined />
-          <span>File2</span>
+          <span>Test4</span>
         </a-menu-item>
       </a-menu>
     </a-layout-sider>
     <a-layout>
-      <a-layout-header style="background: #fff; padding: 0" />
+      <a-layout-header :style="{ paddingRight: '20px', background: '#fff', height: '50px' }">
+        <a-flex justify="flex-end" align="center" style="height: 45px">
+          <a-row>
+            <a-col>
+              <a-avatar :size="35" style="background-color: #87d068">
+                <template #icon><UserOutlined /></template>
+              </a-avatar>
+            </a-col>
+          </a-row>
+        </a-flex>
+      </a-layout-header>
       <a-layout-content style="margin: 0 16px">
         <a-breadcrumb style="margin: 16px 0">
-          <a-breadcrumb-item>User</a-breadcrumb-item>
-          <a-breadcrumb-item>Bill</a-breadcrumb-item>
+          <a-breadcrumb-item>{{ route.name }}</a-breadcrumb-item>
         </a-breadcrumb>
-        <div :style="{ padding: '24px', background: '#fff', minHeight: '360px' }">
-          Bill is a cat.
-
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-          <div>123</div>
-        </div>
+        <router-view v-slot="{ Component }">
+          <transition name="fade" mode="out-in">
+            <component :is="Component" />
+          </transition>
+        </router-view>
       </a-layout-content>
-      <a-layout-footer style="text-align: center"> Ant Design ©2018 Created by Ant UED </a-layout-footer>
+      <a-layout-footer style="text-align: center"> XXX ©2024 Created by XXX </a-layout-footer>
     </a-layout>
+    <a-back-top :visibility-height="0" />
   </a-layout>
 </template>
 <script lang="ts" setup>
+import { goToOtherPage } from '@/router';
 import { PieChartOutlined, DesktopOutlined, UserOutlined, TeamOutlined, FileOutlined } from '@ant-design/icons-vue';
 import { ref } from 'vue';
-const collapsed = ref<boolean>(false);
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+
+const clickMenu = (key: string, path: string) => {
+  selectedKeys.value = [key];
+  goToOtherPage(path);
+};
+
 const selectedKeys = ref<string[]>(['1']);
 </script>
 <style scoped>

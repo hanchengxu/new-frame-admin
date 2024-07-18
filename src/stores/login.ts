@@ -5,7 +5,6 @@ import { PostLoginResponseResult } from '@/api/login/types';
 import { defineStore } from 'pinia';
 import { isEqual } from 'radash';
 import { useGlobalState } from './global';
-import { goToOtherPage } from '@/router';
 
 export interface LoginState {
   username: string;
@@ -35,7 +34,7 @@ export const useLoginStore = defineStore('login', {
       postLogin({ username: this.username, password: this.password }).then((content: PostLoginResponseResult) => {
         if (isEqual(content.status, STATUS_SUCCESS)) {
           useGlobalState().setToken(content.details.token ?? '');
-          useGlobalState().router.push('/top');
+          useGlobalState().router.push('/top/targetList');
         }
       });
     },

@@ -32,7 +32,7 @@ instance.interceptors.response.use(
   (response: AxiosResponse) => {
     useGlobalState().endProcessing();
     const { data } = response;
-    if (response.status !== 200) {
+    if (response.status !== 200 && response.status != 302) {
       return Promise.reject(data);
     } else {
       return data;
@@ -40,7 +40,8 @@ instance.interceptors.response.use(
   },
   (err) => {
     useGlobalState().endProcessing();
-    return Promise.reject({ msg: '请求失败' });
+    useGlobalState().message.error('システムエラー');
+    return Promise.reject(err);
   },
 );
 
