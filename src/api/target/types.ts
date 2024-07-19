@@ -13,6 +13,7 @@ export interface PostTargetResponseResult extends ResponseBase {
 }
 
 export interface TagetListDto {
+  useId: string;
   name: string;
   age?: string;
   gender?: string;

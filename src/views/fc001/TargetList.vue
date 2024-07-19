@@ -24,11 +24,7 @@
                   <a-input placeholder="住所" v-model:value="searchParams.address" />
                 </a-form-item>
                 <a-form-item label="Tag" class="form-item">
-                  <a-select
-                    mode="multiple"
-                    :options="searchParams.tagList"
-                    v-model:value="searchParams.tags"
-                  ></a-select>
+                  <a-select mode="multiple" :options="tagList" v-model:value="searchParams.tags"></a-select>
                 </a-form-item>
                 <a-form-item class="form-item">
                   <a-checkbox>イベント対象</a-checkbox>
@@ -46,10 +42,8 @@
               <a-row>
                 <a-col span="24">
                   <a-flex justify="center" align="center" gap="middle">
-                    <a-button @click="clear">クリア</a-button>
-                    <a-button type="primary" @click="search" :disabled="useGlobalStore().getProcessing">
-                      検索する
-                    </a-button>
+                    <BaseButton @click="clear" type="default">クリア</BaseButton>
+                    <StatefulButton @click="search">検索する</StatefulButton>
                   </a-flex>
                 </a-col>
               </a-row>
@@ -61,12 +55,15 @@
     <a-row style="margin-top: 10px">
       <a-col span="24">
         <a-card>
-          <a-table :dataSource="data" :columns="columns" size="small">
+          <a-table :dataSource="result" :columns="columns" size="small" :loading="useGlobalStore().getProcessing">
             <template #bodyCell="{ column, record }">
               <template v-if="column.key === 'name'">
-                <RouterLink :to="{ name: 'targetEdit', params: { id: record.key } }">
+                <RouterLink :to="{ name: 'targetEdit', params: { id: record.userId } }">
                   {{ record.name }}
                 </RouterLink>
+              </template>
+              <template v-else-if="column.key === 'tags'">
+                <a-tag v-for="tag in record.tags" :key="tag" color="volcano">{{ tag }}</a-tag>
               </template>
             </template>
           </a-table>
@@ -84,7 +81,7 @@ import { storeToRefs } from 'pinia';
 import { useGlobalStore } from '@/stores/global';
 
 const searchStore = useFc001Store();
-const { searchParams } = storeToRefs(searchStore);
+const { searchParams, tagList, result } = storeToRefs(searchStore);
 
 const clear = () => {
   useFc001Store().resetSearch();
@@ -110,19 +107,20 @@ const eventClick = () => {
 };
 
 const activeKey = ref(['search']);
+
 const columns = [
   {
-    title: 'Name',
+    title: '氏名',
     dataIndex: 'name',
     key: 'name',
   },
   {
-    title: 'Age',
+    title: '性別',
     dataIndex: 'age',
     key: 'age',
   },
   {
-    title: 'Address',
+    title: '住所',
     dataIndex: 'address',
     key: 'address',
   },
@@ -134,29 +132,6 @@ const columns = [
   {
     title: 'Action',
     key: 'action',
-  },
-];
-const data = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
   },
 ];
 </script>

@@ -1,6 +1,6 @@
 import router from '@/router';
 import { defineStore } from 'pinia';
-import { markRaw, ref } from 'vue';
+import { markRaw } from 'vue';
 import { RouteRecordName, Router } from 'vue-router';
 
 import { message } from 'ant-design-vue';

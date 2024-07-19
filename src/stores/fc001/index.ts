@@ -4,13 +4,10 @@ import { PostTargetRequest, TagetListDto } from '@/api/target/types';
 import { DefaultOptionType } from 'ant-design-vue/es/select';
 import { defineStore } from 'pinia';
 
-export interface SearchParams extends PostTargetRequest {
-  tagList: DefaultOptionType[];
-}
-
 export interface FC001State {
-  searchParams: SearchParams;
-  result: TagetListDto[];
+  searchParams: PostTargetRequest; //form
+  tagList: DefaultOptionType[]; // 選択肢
+  result: TagetListDto[]; //検索結果
 }
 
 const initDate: FC001State = {
@@ -20,8 +17,8 @@ const initDate: FC001State = {
     gender: '',
     address: '',
     tags: [],
-    tagList: [],
   },
+  tagList: [],
   result: [],
 };
 
@@ -38,21 +35,11 @@ export const useFc001Store = defineStore('fc001', {
   getters: {
     getSearchParams: (state) => state.searchParams,
     getResult: (state) => state.result,
-    // api request body
-    getRequestParams: (state): PostTargetRequest => {
-      return {
-        name: state.searchParams.name,
-        age: state.searchParams.age,
-        gender: state.searchParams.gender,
-        address: state.searchParams.address,
-        tags: state.searchParams.tags,
-      };
-    },
   },
 
   actions: {
     async search() {
-      const list = await postTargetList(this.getRequestParams);
+      const list = await postTargetList(this.getSearchParams);
       this.$state.result = list.details;
     },
     async edit() {},
@@ -61,7 +48,7 @@ export const useFc001Store = defineStore('fc001', {
 
     async getTags() {
       const tagList = await getTagList();
-      this.$state.searchParams.tagList = tagList.details;
+      this.$state.tagList = tagList.details;
     },
 
     resetSearch() {

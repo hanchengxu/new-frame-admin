@@ -1,6 +1,6 @@
 <template>
   <a-layout style="min-height: 100vh" has-sider>
-    <a-layout-sider id="components-layout-demo-side" collapsible>
+    <a-layout-sider id="components-layout-demo-side" collapsible breakpoint="lg">
       <div class="logo" />
       <a-menu v-model:selectedKeys="getActiveMenu" theme="dark" mode="inline">
         <a-menu-item key="1" @click="clickMenu('1', 'targetList')">
@@ -56,7 +56,7 @@
           </a-avatar>
         </a-flex>
       </a-layout-header>
-      <a-layout-content style="margin: 0 16px">
+      <a-layout-content style="margin: 12px 16px">
         <router-view v-slot="{ Component }">
           <transition name="fade" mode="out-in">
             <component :is="Component" />

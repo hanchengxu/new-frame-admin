@@ -4,7 +4,6 @@ import { resolve } from 'path';
 import eslint from 'vite-plugin-eslint2';
 import Components from 'unplugin-vue-components/vite';
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers';
-import mockDevServerPlugin from 'vite-plugin-mock-dev-server';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -18,7 +17,6 @@ export default defineConfig({
       fix: true,
       include: ['src/**/*.ts', 'src/**/*.vue'],
     }),
-    mockDevServerPlugin({ log: 'info' }),
   ],
   resolve: {
     alias: {
