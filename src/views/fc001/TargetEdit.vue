@@ -7,7 +7,10 @@
       :disabled="componentDisabled"
       style="max-width: 600px"
     >
-      <a-divider orientation="left" style="height: 2px; border-color: #1677ff">基本情報</a-divider>
+      <a-divider orientation="left" style="height: 2px; border-color: #1677ff"
+        >基本情報<span>{{ route.params.id }}</span></a-divider
+      >
+      <RouterLink :to="{ name: 'targetPreview', params: { id: 1 } }"> preview </RouterLink>
       <a-form-item label="Checkbox">
         <a-checkbox>checkbox</a-checkbox>
       </a-form-item>
@@ -72,6 +75,8 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { PlusOutlined } from '@ant-design/icons-vue';
+import { useRoute } from 'vue-router';
+const route = useRoute();
 
 const componentDisabled = ref(true);
 const labelCol = { style: { width: '150px' } };

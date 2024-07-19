@@ -2,10 +2,10 @@ import { ResponseBase } from '../BaseType';
 
 export interface PostTargetRequest {
   name: string;
-  age: string;
-  gender: string;
-  address: string;
-  tags: string[];
+  age?: string;
+  gender?: string;
+  address?: string;
+  tags?: string[];
 }
 
 export interface PostTargetResponseResult extends ResponseBase {

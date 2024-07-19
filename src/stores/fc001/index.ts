@@ -1,3 +1,4 @@
+import { getTagList } from '@/api/common/getTagList';
 import { postTargetList } from '@/api/target/postTargetList';
 import { PostTargetRequest, TagetListDto } from '@/api/target/types';
 import { DefaultOptionType } from 'ant-design-vue/es/select';
@@ -19,19 +20,12 @@ const initDate: FC001State = {
     gender: '',
     address: '',
     tags: [],
-    tagList: [
-      { value: 1, label: 'tag1' },
-      { value: 2, label: 'tag2' },
-      { value: 3, label: 'tag3' },
-      { value: 4, label: 'tag4' },
-      { value: 5, label: 'tag5' },
-      { value: 6, label: 'tag6' },
-    ],
+    tagList: [],
   },
   result: [],
 };
 
-// 初期化store,必須メソッド
+// 初期化store,必須
 const initState = (): FC001State => {
   return structuredClone(initDate);
 };
@@ -64,6 +58,12 @@ export const useFc001Store = defineStore('fc001', {
     async edit() {},
     async delete() {},
     async add() {},
+
+    async getTags() {
+      const tagList = await getTagList();
+      this.$state.searchParams.tagList = tagList.details;
+    },
+
     resetSearch() {
       this.$patch((state) => {
         state.searchParams = initState().searchParams;

@@ -47,7 +47,7 @@
                 <a-col span="24">
                   <a-flex justify="center" align="center" gap="middle">
                     <a-button @click="clear">クリア</a-button>
-                    <a-button type="primary" @click="search" :disabled="useGlobalState().getProcessing">
+                    <a-button type="primary" @click="search" :disabled="useGlobalStore().getProcessing">
                       検索する
                     </a-button>
                   </a-flex>
@@ -64,7 +64,7 @@
           <a-table :dataSource="data" :columns="columns" size="small">
             <template #bodyCell="{ column, record }">
               <template v-if="column.key === 'name'">
-                <RouterLink to="/top/targetEdit">
+                <RouterLink :to="{ name: 'targetEdit', params: { id: record.key } }">
                   {{ record.name }}
                 </RouterLink>
               </template>
@@ -76,19 +76,15 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import { useFc001Store } from '@/stores/fc001';
 import { storeToRefs } from 'pinia';
-import { useGlobalState } from '@/stores/global';
+import { useGlobalStore } from '@/stores/global';
 
 const searchStore = useFc001Store();
 const { searchParams } = storeToRefs(searchStore);
-
-const global = useGlobalState();
-
-console.log(global.router);
 
 const clear = () => {
   useFc001Store().resetSearch();
@@ -97,6 +93,11 @@ const clear = () => {
 const search = () => {
   searchStore.search();
 };
+
+onMounted(() => {
+  //tag選択肢の取得
+  searchStore.getTags();
+});
 
 const timePickerValue = ref<Dayjs>(dayjs('08:00:00', 'HH:mm:ss'));
 

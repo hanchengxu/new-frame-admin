@@ -4,8 +4,7 @@ import { postLogin } from '@/api/login/postLogin';
 import { PostLoginResponseResult } from '@/api/login/types';
 import { defineStore } from 'pinia';
 import { isEqual } from 'radash';
-import { useGlobalState } from './global';
-
+import { useGlobalStore } from './global';
 export interface LoginState {
   username: string;
   password: string;
@@ -33,8 +32,9 @@ export const useLoginStore = defineStore('login', {
     async login() {
       postLogin({ username: this.username, password: this.password }).then((content: PostLoginResponseResult) => {
         if (isEqual(content.status, STATUS_SUCCESS)) {
-          useGlobalState().setToken(content.details.token ?? '');
-          useGlobalState().router.push('/top/targetList');
+          useGlobalStore().setToken(content.details.token ?? '');
+          useGlobalStore().router.push({ name: 'top' });
+          useGlobalStore().setActiveMenu('1');
         }
       });
     },

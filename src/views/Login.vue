@@ -28,8 +28,8 @@
               <a-button
                 type="primary"
                 html-type="submit"
-                :disabled="useGlobalState().getProcessing"
-                :loading="useGlobalState().getProcessing"
+                :disabled="useGlobalStore().getProcessing"
+                :loading="useGlobalStore().getProcessing"
               >
                 ログイン
               </a-button>
@@ -44,7 +44,7 @@
 </template>
 <script lang="ts" setup>
 import { useLoginStore } from '@/stores/login';
-import { useGlobalState } from '@/stores/global';
+import { useGlobalStore } from '@/stores/global';
 
 //validate success
 const onFinish = () => {

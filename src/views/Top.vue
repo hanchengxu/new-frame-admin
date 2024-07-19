@@ -2,12 +2,12 @@
   <a-layout style="min-height: 100vh" has-sider>
     <a-layout-sider id="components-layout-demo-side" collapsible>
       <div class="logo" />
-      <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
-        <a-menu-item key="1" @click="clickMenu('1', '/top/targetList')">
+      <a-menu v-model:selectedKeys="getActiveMenu" theme="dark" mode="inline">
+        <a-menu-item key="1" @click="clickMenu('1', 'targetList')">
           <pie-chart-outlined />
           <span>イベント検索</span>
         </a-menu-item>
-        <a-menu-item key="2" @click="clickMenu('2', '/top/qrcode')">
+        <a-menu-item key="2" @click="clickMenu('2', 'qrcode')">
           <desktop-outlined />
           <span>QRコード管理</span>
         </a-menu-item>
@@ -39,21 +39,24 @@
       </a-menu>
     </a-layout-sider>
     <a-layout>
-      <a-layout-header :style="{ paddingRight: '20px', background: '#fff', height: '50px' }">
-        <a-flex justify="flex-end" align="center" style="height: 45px">
-          <a-row>
-            <a-col>
-              <a-avatar :size="35" style="background-color: #87d068">
-                <template #icon><UserOutlined /></template>
-              </a-avatar>
-            </a-col>
-          </a-row>
+      <a-layout-header :style="{ paddingLeft: '20px', paddingRight: '20px', background: '#fff', height: '50px' }">
+        <a-flex justify="space-between" align="center" style="height: 45px">
+          <a-breadcrumb>
+            <template v-for="(breadcrumb, index) in breadcrumbList" :key="index">
+              <a-breadcrumb-item v-if="index != breadcrumbList.length - 1">
+                <RouterLink :to="{ name: breadcrumb.routeName }">{{ breadcrumb.breadcrumbName }}</RouterLink>
+              </a-breadcrumb-item>
+              <a-breadcrumb-item v-else>
+                {{ breadcrumb.breadcrumbName }}
+              </a-breadcrumb-item>
+            </template>
+          </a-breadcrumb>
+          <a-avatar :size="35" style="background-color: #87d068">
+            <template #icon><UserOutlined /></template>
+          </a-avatar>
         </a-flex>
       </a-layout-header>
       <a-layout-content style="margin: 0 16px">
-        <a-breadcrumb style="margin: 16px 0">
-          <a-breadcrumb-item>{{ route.name }}</a-breadcrumb-item>
-        </a-breadcrumb>
         <router-view v-slot="{ Component }">
           <transition name="fade" mode="out-in">
             <component :is="Component" />
@@ -66,19 +69,22 @@
   </a-layout>
 </template>
 <script lang="ts" setup>
-import { goToOtherPage } from '@/router';
+import { useGlobalStore } from '@/stores/global';
 import { PieChartOutlined, DesktopOutlined, UserOutlined, TeamOutlined, FileOutlined } from '@ant-design/icons-vue';
-import { ref } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
 
-const clickMenu = (key: string, path: string) => {
-  selectedKeys.value = [key];
-  goToOtherPage(path);
-};
+const globalStore = useGlobalStore();
+const { getActiveMenu, breadcrumbList } = storeToRefs(globalStore);
 
-const selectedKeys = ref<string[]>(['1']);
+const clickMenu = (key: string, routerName: string) => {
+  if (route.name !== routerName) {
+    globalStore.router.push({ name: routerName });
+    globalStore.setActiveMenu(key);
+  }
+};
 </script>
 <style scoped>
 #components-layout-demo-side .logo {

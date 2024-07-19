@@ -1,7 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { isEmpty } from 'radash';
-import { useGlobalState } from '@/stores/global';
-
+import { useGlobalStore } from '@/stores/global';
 const env: ImportMetaEnv = import.meta.env;
 
 // 创建axios实例
@@ -18,11 +17,11 @@ instance.interceptors.request.use(
     if (isEmpty(config.baseURL) && !config?.url?.startsWith('http') && !config?.url?.startsWith('https')) {
       config.baseURL = env.VITE_API_BASE_URL;
     }
-    useGlobalState().startProcessing();
+    useGlobalStore().startProcessing();
     return config;
   },
   (error) => {
-    useGlobalState().endProcessing();
+    useGlobalStore().endProcessing();
     return Promise.reject(error);
   },
 );
@@ -30,7 +29,7 @@ instance.interceptors.request.use(
 // 响应response拦截器
 instance.interceptors.response.use(
   (response: AxiosResponse) => {
-    useGlobalState().endProcessing();
+    useGlobalStore().endProcessing();
     const { data } = response;
     if (response.status !== 200 && response.status != 302) {
       return Promise.reject(data);
@@ -39,8 +38,8 @@ instance.interceptors.response.use(
     }
   },
   (err) => {
-    useGlobalState().endProcessing();
-    useGlobalState().message.error('システムエラー');
+    useGlobalStore().endProcessing();
+    useGlobalStore().message('システムエラー', 'error');
     return Promise.reject(err);
   },
 );
