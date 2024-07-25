@@ -55,7 +55,14 @@
     <a-row style="margin-top: 10px">
       <a-col span="24">
         <a-card>
-          <a-table :dataSource="result" :columns="columns" size="small" :loading="useGlobalStore().getProcessing">
+          <a-table
+            :dataSource="result"
+            :columns="columns"
+            size="small"
+            :loading="useGlobalStore().getProcessing"
+            :pagination="searchStore.getPagination"
+            @change="handleTableChange"
+          >
             <template #bodyCell="{ column, record }">
               <template v-if="column.key === 'name'">
                 <RouterLink :to="{ name: 'targetEdit', params: { id: record.userId } }">
@@ -83,12 +90,16 @@ import { useGlobalStore } from '@/stores/global';
 const searchStore = useFc001Store();
 const { searchParams, tagList, result } = storeToRefs(searchStore);
 
-const clear = () => {
-  useFc001Store().resetSearch();
-};
-
 const search = () => {
   searchStore.search();
+};
+
+const handleTableChange = (pagination: { current: number; pageSize: number }) => {
+  searchStore.setPagination(pagination.current, pagination.pageSize);
+};
+
+const clear = () => {
+  useFc001Store().resetSearch();
 };
 
 onMounted(() => {

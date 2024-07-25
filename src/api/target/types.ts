@@ -1,6 +1,6 @@
-import { ResponseBase } from '../BaseType';
+import { RequestBase, ResponseBase } from '../BaseType';
 
-export interface PostTargetRequest {
+export interface PostTargetRequest extends RequestBase {
   name: string;
   age?: string;
   gender?: string;

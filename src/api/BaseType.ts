@@ -2,6 +2,7 @@
 export interface ResponseBase {
   status: string;
   details: any;
+  total: number;
 }
 
 export interface RequestBase {
